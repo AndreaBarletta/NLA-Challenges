@@ -1,13 +1,29 @@
-#include <Eigen/Eigen>
+#include <Eigen/Dense>
 #include <iostream>
 
-using Eigen::Matrix3d;
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include "stb_image_write.h"
+
 using namespace std;
+using namespace Eigen;
 
 int main(int argc, char** argv)
 {
-        Matrix3d m=Matrix3d::Zero();
-        cout << m << endl;
-        m.transpose();
-        return 0;
+    //Task 1
+    int width, height, channels;
+    unsigned char* imageData = stbi_load("Albert_Einstein_Head.jpg", &width, &height, &channels, 1);
+
+    Matrix<short,Dynamic,Dynamic> gscale(height,width);
+    for(int i=0;i<height;i++){
+        for(int j=0;j<width;j++){
+            gscale(i,j)=static_cast<short>(imageData[i*width+j]);
+        }
+    }
+
+    cout << "Matrix dimension: " << gscale.rows() << "x" << gscale.cols() << endl;
+    //Task 2
+
+    return 0;
 }
