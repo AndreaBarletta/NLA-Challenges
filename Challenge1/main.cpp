@@ -13,7 +13,7 @@ int main(int argc, char** argv)
 {
     //Task 1
     int width, height, channels;
-    unsigned char* imageData = stbi_load("Albert_Einstein_Head.jpg", &width, &height, &channels, 1);
+    unsigned char* imageData = stbi_load("einstein.jpg", &width, &height, &channels, 1);
 
     Matrix<short,Dynamic,Dynamic> gscale(height,width);
     for(int i=0;i<height;i++){
