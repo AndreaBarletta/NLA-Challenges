@@ -15,10 +15,10 @@ int main(int argc, char** argv)
     int width, height, channels;
     unsigned char* imageData = stbi_load("einstein.jpg", &width, &height, &channels, 1);
 
-    Matrix<short,Dynamic,Dynamic> gscale(height,width);
+    MatrixXd gscale(height,width);
     for(int i=0;i<height;i++){
         for(int j=0;j<width;j++){
-            gscale(i,j)=static_cast<short>(imageData[i*width+j]);
+            gscale(i,j)=static_cast<double>(imageData[i*width+j]);
         }
     }
 
