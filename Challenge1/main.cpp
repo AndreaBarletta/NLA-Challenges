@@ -31,9 +31,9 @@ int saveToFile(MatrixXd imageMatrix, int height, int width, const std::string ou
 SparseMatrix<double> convToM(Matrix3d convM, int Aheight, int Awidth)
 {
     SparseMatrix<double> m(Aheight * Awidth, Aheight * Awidth);
+    m.reserve(VectorXd::Constant(Aheight*Awidth,9));
     for (int i = 0; i < Aheight * Awidth; i++)
     {
-        cout << i << endl;
         //Top and bottom diagonal
         if (i + Aheight < Aheight * Awidth)
         {
@@ -71,6 +71,7 @@ SparseMatrix<double> convToM(Matrix3d convM, int Aheight, int Awidth)
         }
     }
 
+    m.makeCompressed();
     return m;
 }
 
@@ -142,7 +143,6 @@ int main(int argc, char **argv)
     VectorXd sharpenedv(height*width);
     sharpenedv = A2 * v;
     MatrixXd sharpened = Map<MatrixXd>(sharpenedv.data(),height,width);
-    cout << sharpened << endl;
     cout << (saveToFile(sharpened, height, width, "sharpened.png") == 0 ? "Exported sharpened image" : "Error Occured") << endl;
     
     //Task 10 (Hlap)
