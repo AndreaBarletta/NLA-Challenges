@@ -1,3 +1,4 @@
+#include <Eigen/Eigen>
 #include <Eigen/Dense>
 #include <Eigen/Sparse>
 #include <iostream>
@@ -109,14 +110,25 @@ int main(int argc, char **argv)
     cout << (saveToFile(noisy, width, height, "noisy.png") == 0 ? "Exported noisy image" : "Error Occured") << endl;
     
     //Task 3 (Reshape)
-    Map<Matrix<double,Dynamic,Dynamic>> v(gscale.data(), gscale.size());
+    Map<VectorXd> v(gscale.data(), gscale.size());
+    Map<VectorXd> w(noisy.data(), noisy.size());
+
+    int vComponents = v.rows();
+    int wComponents = w.rows();
+
+    if (vComponents == height*width && wComponents == height*width) {
+        printf("Number of components is correct\n");
+    }
+
+    double norm = sqrt(v.dot(v));
+    printf("The norm is %f\n", norm);
     
     //Task 4 (Hav2)
     Matrix3d Hav1 = Matrix3d::Ones();
     Hav1 /= 8.0;
-
     SparseMatrix<double> m = convToM(Hav1, height, width);
     cout << m.nonZeros() << endl;
 
+    //Task 5 
     return 0;
 }
