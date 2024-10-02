@@ -109,6 +109,7 @@ int main(int argc, char **argv)
     cout << (saveToFile(noisy, width, height, "noisy.png") == 0 ? "Exported noisy image" : "Error Occured") << endl;
     
     //Task 3 (Reshape)
+    Map<Matrix<double,Dynamic,Dynamic>> v(gscale.data(), gscale.size());
     
     //Task 4 (Hav2)
     Matrix3d Hav1 = Matrix3d::Ones();
