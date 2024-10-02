@@ -18,7 +18,7 @@ int saveToFile(MatrixXd imageMatrix, int height, int width, const std::string ou
 {
     Matrix<unsigned char, Dynamic, Dynamic, RowMajor> outputImage(width, height);
     outputImage = imageMatrix.unaryExpr([](double val) -> unsigned char
-                                        { return static_cast<unsigned char>(val); });
+                                        { return static_cast<unsigned char>(std::max(std::min(val,255.0),0.0)); });
 
     if (stbi_write_png(ouputFileName.c_str(), width, height, 1, outputImage.data(), width) == 0)
     {
@@ -114,23 +114,20 @@ int main(int argc, char **argv)
     Map<VectorXd> v(gscale.data(), gscale.size());
     Map<VectorXd> w(noisy.data(), noisy.size());
 
-    int vComponents = v.rows();
-    int wComponents = w.rows();
-
     double norm = sqrt(v.dot(v));
     cout << "The norm is " << norm << endl;
     
     //Task 4 (Hav2)
-    // Matrix3d Hav2 = Matrix3d::Ones();
-    // Hav2 /= 9.0;
-    // SparseMatrix<double> A1 = convToM(Hav2, height, width);
-    // cout << "Non-zero entries in A1:" << A1.nonZeros() << endl;
+    Matrix3d Hav2 = Matrix3d::Ones();
+    Hav2 /= 9.0;
+    SparseMatrix<double> A1 = convToM(Hav2, height, width);
+    cout << "Non-zero entries in A1:" << A1.nonZeros() << endl;
 
-    // //Task 5 (Apply Hav2)
-    // VectorXd smoothedw(height*width);
-    // smoothedw = A1 * w;
-    // MatrixXd smoothed = Map<MatrixXd>(smoothedw.data(),height,width);
-    // cout << (saveToFile(smoothed, height, width, "smoothed.png") == 0 ? "Exported smoothed image" : "Error Occured") << endl;
+    //Task 5 (Apply Hav2)
+    VectorXd smoothedw(height*width);
+    smoothedw = A1 * w;
+    MatrixXd smoothed = Map<MatrixXd>(smoothedw.data(),height,width);
+    cout << (saveToFile(smoothed, height, width, "smoothed.png") == 0 ? "Exported smoothed image" : "Error Occured") << endl;
 
     //Task 6 (Hsh2)
     Matrix3d Hsh2;
@@ -139,12 +136,27 @@ int main(int argc, char **argv)
             0, -1, 0; 
     SparseMatrix<double> A2 = convToM(Hsh2, height, width);
     cout << "Non-zero entries in A2:" << A2.nonZeros() << endl;
-    cout << "Symmetric: " << A2.isApprox(A2.transpose()) << endl;
+    cout << "Is A2 Symmetric: " << A2.isApprox(A2.transpose()) << endl;
 
-    //Task 6 (Apply Hsh2)
+    //Task 7 (Apply Hsh2)
     VectorXd sharpenedv(height*width);
     sharpenedv = A2 * v;
     MatrixXd sharpened = Map<MatrixXd>(sharpenedv.data(),height,width);
+    cout << sharpened << endl;
     cout << (saveToFile(sharpened, height, width, "sharpened.png") == 0 ? "Exported sharpened image" : "Error Occured") << endl;
+    
+    //Task 10 (Hlap)
+    Matrix3d Hlap;
+    Hlap << 0, -1, 0,
+            -1, 4,-1,
+            0, -1, 0; 
+    SparseMatrix<double> A3 = convToM(Hlap, height, width);
+    cout << "Is A3 Symmetric: " << A3.isApprox(A3.transpose()) << endl;
+
+    //Task 11 (Apply Hlap)
+    VectorXd laplacev(height*width);
+    laplacev = A3 * v;
+    MatrixXd laplace = Map<MatrixXd>(laplacev.data(),height,width);
+    cout << (saveToFile(laplace, height, width, "laplace.png") == 0 ? "Exported laplace image" : "Error Occured") << endl;
     return 0;
 }
