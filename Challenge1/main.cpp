@@ -71,6 +71,7 @@ SparseMatrix<double> convToM(Matrix3d convM, int Aheight, int Awidth)
         }
     }
 
+    m.prune(0.0);
     m.makeCompressed();
     return m;
 }
@@ -123,6 +124,7 @@ int main(int argc, char **argv)
     Hav2 /= 9.0;
     SparseMatrix<double> A1 = convToM(Hav2, height, width);
     cout << "Non-zero entries in A1:" << A1.nonZeros() << endl;
+    cout << "Is A1 Symmetric: " << A1.isApprox(A1.transpose()) << endl;
 
     //Task 5 (Apply Hav2)
     VectorXd smoothedw(height*width);
@@ -151,6 +153,7 @@ int main(int argc, char **argv)
             -1, 4,-1,
             0, -1, 0; 
     SparseMatrix<double> A3 = convToM(Hlap, height, width);
+    cout << "Non-zero entries in A3:" << A3.nonZeros() << endl;
     cout << "Is A3 Symmetric: " << A3.isApprox(A3.transpose()) << endl;
 
     //Task 11 (Apply Hlap)
