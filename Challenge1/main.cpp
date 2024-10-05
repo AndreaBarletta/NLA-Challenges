@@ -1,6 +1,7 @@
 #include <Eigen/Eigen>
 #include <Eigen/Dense>
 #include <Eigen/Sparse>
+#include <unsupported/Eigen/SparseExtra>
 #include <iostream>
 #include <random>
 
@@ -147,6 +148,25 @@ int main(int argc, char **argv)
     MatrixXd sharpened = Map<MatrixXd>(sharpenedv.data(),height,width);
     cout << (saveToFile(sharpened, height, width, "sharpened.png") == 0 ? "Exported sharpened image" : "Error Occured") << endl;
     
+    //Task 8 (Exporting A2 and w)
+    saveMarket(A2,"A2.mtx");
+    cout << "Matrix A2 exported" << endl;
+
+    FILE* out = fopen("w.mtx","w");
+    fprintf(out,"%%%%MatrixMarket vector coordinate real general\n");
+    fprintf(out,"%d\n", height*width);
+    for (int i=0; i<height*width; i++) {
+       fprintf(out,"%d %f\n", i ,w(i));
+    }
+    fclose(out);
+    cout << "Vector w exported" << endl;
+
+    //Task 9 (Importing x and exporting it as .png)
+    VectorXd x;
+    loadMarketVector(x,"x.mtx");
+    MatrixXd firstSysSol = Map<MatrixXd>(x.data(),height,width);
+    cout << (saveToFile(firstSysSol, height, width, "sol1.png") == 0 ? "Exported first solution as an image" : "Error Occured") << endl;
+    
     //Task 10 (Hlap)
     Matrix3d Hlap;
     Hlap << 0, -1, 0,
@@ -161,5 +181,24 @@ int main(int argc, char **argv)
     laplacev = A3 * v;
     MatrixXd laplace = Map<MatrixXd>(laplacev.data(),height,width);
     cout << (saveToFile(laplace, height, width, "laplace.png") == 0 ? "Exported laplace image" : "Error Occured") << endl;
+    
+    //Task 12 (Solve (I+A3)y=w)
+    SparseMatrix<double> A = A3;
+    for(int i=0;i<height*width;i++){
+        A.coeffRef(i,i)+=1;
+    }
+    BiCGSTAB<SparseMatrix<double>> solver;
+    solver.setTolerance(1e-10);
+    solver.compute(A);
+    VectorXd y = solver.solve(w);
+    double residual =  (w-A*y).norm()/w.norm();
+
+    std::cout << "Solved in " << solver.iterations() << " iterations" << std::endl;
+    std::cout << "Final (relative) residual is " << residual << std::endl;
+
+    //Task 13 (Export the solution)
+    MatrixXd secSysSol = Map<MatrixXd>(y.data(),height,width);
+    cout << (saveToFile(secSysSol, height, width, "sol2.png") == 0 ? "Exported second solution as an image" : "Error Occured") << endl;
+    
     return 0;
 }

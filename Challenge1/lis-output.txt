@@ -1,0 +1,19 @@
+number of processes = 1
+matrix size = 87296 x 87296 (435286 nonzero entries)
+
+initial vector x      : all components set to 0
+precision             : double
+linear solver         : BiCGSTAB
+preconditioner        : ILU(0)
+convergence condition : ||b-Ax||_2 <= 1.0e-09 * ||b-Ax_0||_2
+matrix storage format : CSR
+linear solver status  : normal end
+
+BiCGSTAB: number of iterations = 13
+BiCGSTAB:   double             = 13
+BiCGSTAB:   quad               = 0
+BiCGSTAB: elapsed time         = 7.226515e-02 sec.
+BiCGSTAB:   preconditioner     = 4.237723e-02 sec.
+BiCGSTAB:     matrix creation  = 0.000000e+00 sec.
+BiCGSTAB:   linear solver      = 2.988791e-02 sec.
+BiCGSTAB: relative residual    = 4.455268e-10
