@@ -30,6 +30,33 @@ int saveToFile(MatrixXd imageMatrix, int height, int width, const std::string ou
 
     return 0;
 }
+
+void Compression(Eigen::MatrixXd U, Eigen::MatrixXd V, Eigen::VectorXd S, int k) {
+    printf("k = %d\n", k);
+    Eigen::MatrixXd C(U.rows(), k);
+    Eigen::MatrixXd D(V.rows(), k);
+    printf("n_col of U: %d\n", U.cols());
+    printf("n_rows of U: %d\n", U.rows());
+    printf("n_col of V: %d\n", V.cols());
+    printf("n_rows of V: %d\n", V.rows());
+    printf("n_col of C: %d\n", C.cols());
+    printf("n_rows of C: %d\n", C.rows());
+    printf("n_col of D: %d\n", D.cols());
+    printf("n_rows of D: %d\n", D.rows());
+
+    for (int i = 0; i < C.cols(); i++) {
+        C.col(i) = U.col(i);
+    }
+    for (int i = 0; i < D.cols(); i++) {
+        D.col(i) = V.col(i)*S[i];
+    }
+    int nonzero_C = (C.array() != 0).count();
+    int nonzero_D = (D.array() != 0).count();
+    printf("Number of nonzero entries in C: %d\n", nonzero_C);
+    printf("Number of nonzero entries in D: %d\n", nonzero_D);
+    printf("\n");
+}
+
 int main(int argc, char **argv)
 {
     //Task 1 (Load image)
@@ -75,28 +102,9 @@ int main(int argc, char **argv)
     //Task 6
     Eigen::MatrixXd U = svd.matrixU();
     Eigen::MatrixXd V = svd.matrixV();
-    int k = 40;
-    Eigen::MatrixXd C(U.rows(), k);
-    Eigen::MatrixXd D(V.rows(), k);
-    printf("n_col of U: %d\n", U.cols());
-    printf("n_rows of U: %d\n", U.rows());
-    printf("n_col of V: %d\n", V.cols());
-    printf("n_rows of V: %d\n", V.rows());
-    printf("n_col of C: %d\n", C.cols());
-    printf("n_rows of C: %d\n", C.rows());
-    printf("n_col of D: %d\n", D.cols());
-    printf("n_rows of D: %d\n", D.rows());
-
-    for (int i = 0; i < C.cols(); i++) {
-        C.col(i) = U.col(i);
-    }
-    for (int i = 0; i < D.cols(); i++) {
-        D.col(i) = V.col(i)*S[i];
-    }
-    int nonzero_C = (C.array() != 0).count();
-    int nonzero_D = (D.array() != 0).count();
-    printf("Number of nonzero entries in C: %d\n", nonzero_C);
-    printf("Number of nonzero entries in D: %d\n", nonzero_D);
+    Compression(U, V, S, 40);
+    Compression(U, V, S, 80);
 
     return 0;
 }
+
