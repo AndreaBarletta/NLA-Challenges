@@ -49,10 +49,18 @@ int main(int argc, char **argv)
     cout << "Norm of A^T*A: " << gscaleSym.norm() << endl;
 
     //Task 2
-
     SelfAdjointEigenSolver<MatrixXd> es;
     es.compute(gscaleSym);
     printf("First eigenvalue is %f", es.eigenvalues());
-   
+
+    //Task 3
+    saveMarket(gscaleSym,"ATA.mtx");
+    cout << "Matrix A^T*A exported" << endl;
+    cout << "Computing largest eigeinvalue using LIS: " << endl;
+    system("./etest1 ATA.mtx eigvec.mtx hist.txt -e pi -etol 1.e-8");
+
+    //Task 4
+    cout << "Computing largest eigeinvalue using LIS with an appropriate shift: " << endl;
+    system("./etest1 ATA.mtx eigvec.mtx hist.txt -e pi -etol 1.e-8 -shift ");
     return 0;
 }
