@@ -31,6 +31,25 @@ int saveToFile(MatrixXd imageMatrix, int height, int width, const std::string ou
     return 0;
 }
 
+
+MatrixXd createCheckerboard(int dimension){
+    MatrixXd checkerboard(dimension,dimension);
+    int sizeSquare = dimension/8;
+    for(int i=0;i<dimension;i++){
+        for(int j=0;j<dimension;j++){
+            if((i/sizeSquare+j/sizeSquare)%2){
+                //White square
+                checkerboard(i,j)=255;
+            }else{
+                //Black square
+                checkerboard(i,j)=0;
+            }
+        }
+    }
+
+    return checkerboard;
+}
+
 void Compression(Eigen::MatrixXd U, Eigen::MatrixXd V, Eigen::VectorXd S, int k, 
     const std::string ouputFileName) {
     printf("k = %d\n", k);
@@ -109,6 +128,31 @@ int main(int argc, char **argv)
     Compression(U, V, S, 80, "Compressed_Einsten_80.png");
 
 
+    
+    //Task 8
+    MatrixXd checkerboard = createCheckerboard(200);
+    cout << "Norm of the checkerboard matrix: " << checkerboard.norm() << endl;
+    cout << "Saving checkerboard to file" << endl;
+    saveToFile(checkerboard,200,200,"checkerboard.png");
+
+    //Task 9
+    default_random_engine generator;
+    uniform_int_distribution<int> distribution(-MARGIN, MARGIN);
+    MatrixXd noisy(200, 200);
+    for (int i = 0; i < 200; i++)
+    {
+        for (int j = 0; j < 200; j++)
+        {
+            int number = distribution(generator);
+            noisy(i, j) = checkerboard(i, j) + distribution(generator);
+            if (noisy(i, j) < 0)
+                noisy(i, j) = 0;
+            else if (noisy(i, j) > 255)
+                noisy(i, j) = 255;
+        }
+    }
+    cout << "Saving noisy checkerboard to file" << endl;
+    saveToFile(noisy,200,200,"noisy_checkerboard.png");
     return 0;
 }
 
