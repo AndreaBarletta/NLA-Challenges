@@ -44,10 +44,15 @@ int main(int argc, char **argv)
         }
     }
 
+    MatrixXd gscaleSym(width,width);
+    gscaleSym = gscale.transpose()*gscale;
+    cout << "Norm of A^T*A: " << gscaleSym.norm() << endl;
+
     //Task 2
 
     SelfAdjointEigenSolver<MatrixXd> es;
     es.compute(gscaleSym);
     printf("First eigenvalue is %f", es.eigenvalues());
+   
     return 0;
 }
