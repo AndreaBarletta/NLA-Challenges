@@ -153,6 +153,22 @@ int main(int argc, char **argv)
     }
     cout << "Saving noisy checkerboard to file" << endl;
     saveToFile(noisy,200,200,"noisy_checkerboard.png");
+
+    //Task 10
+    Eigen::BDCSVD<Eigen::MatrixXd> svd_noisy(noisy, Eigen::ComputeThinU | Eigen::ComputeThinV);
+    Eigen::VectorXd S_noisy = svd_noisy.singularValues();
+    printf("First eigenvalue is %f\n", S_noisy[0]);
+    printf("Second eigenvalue is %f\n", S_noisy[1]);
+
+    //Task 11 and 12
+    Eigen::MatrixXd U_noisy = svd_noisy.matrixU();
+    Eigen::MatrixXd V_noisy = svd_noisy.matrixV();
+    Compression(U_noisy, V_noisy, S_noisy, 1, "Compressed_Check_1.png");
+    Compression(U_noisy, V_noisy, S_noisy, 2, "Compressed_Check_2.png");
+    Compression(U_noisy, V_noisy, S_noisy, 3, "Compressed_Check_3.png");
+    Compression(U_noisy, V_noisy, S_noisy, 4, "Compressed_Check_4.png");
+    Compression(U_noisy, V_noisy, S_noisy, 5, "Compressed_Check_5.png");
+    Compression(U_noisy, V_noisy, S_noisy, 10, "Compressed_Check_10.png");
     return 0;
 }
 
