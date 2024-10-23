@@ -42,5 +42,9 @@ int main(int argc, char **argv)
             gscale(i, j) = static_cast<double>(imageData[i * width + j]);
         }
     }
+
+    MatrixXd gscaleSym(width,width);
+    gscaleSym = gscale.transpose()*gscale;
+    cout << "Norm of A^T*A: " << gscaleSym.norm() << endl;
     return 0;
 }
