@@ -49,6 +49,32 @@ MatrixXd createCheckerboard(int dimension){
     return checkerboard;
 }
 
+void Compression(Eigen::MatrixXd U, Eigen::MatrixXd V, Eigen::VectorXd S, int k) {
+    printf("k = %d\n", k);
+    Eigen::MatrixXd C(U.rows(), k);
+    Eigen::MatrixXd D(V.rows(), k);
+    printf("n_col of U: %d\n", U.cols());
+    printf("n_rows of U: %d\n", U.rows());
+    printf("n_col of V: %d\n", V.cols());
+    printf("n_rows of V: %d\n", V.rows());
+    printf("n_col of C: %d\n", C.cols());
+    printf("n_rows of C: %d\n", C.rows());
+    printf("n_col of D: %d\n", D.cols());
+    printf("n_rows of D: %d\n", D.rows());
+
+    for (int i = 0; i < C.cols(); i++) {
+        C.col(i) = U.col(i);
+    }
+    for (int i = 0; i < D.cols(); i++) {
+        D.col(i) = V.col(i)*S[i];
+    }
+    int nonzero_C = (C.array() != 0).count();
+    int nonzero_D = (D.array() != 0).count();
+    printf("Number of nonzero entries in C: %d\n", nonzero_C);
+    printf("Number of nonzero entries in D: %d\n", nonzero_D);
+    printf("\n");
+}
+
 int main(int argc, char **argv)
 {
     //Task 1 (Load image)
@@ -88,12 +114,14 @@ int main(int argc, char **argv)
     //Task 5
     
     Eigen::BDCSVD<Eigen::MatrixXd> svd(gscale, Eigen::ComputeThinU | Eigen::ComputeThinV);
-    Eigen::VectorXd singular_values = svd.singularValues();
-    printf("The euclidean norm is %f\n", singular_values.norm());
+    Eigen::VectorXd S = svd.singularValues();
+    printf("The euclidean norm is %f\n", S.norm());
 
     //Task 6
     Eigen::MatrixXd U = svd.matrixU();
     Eigen::MatrixXd V = svd.matrixV();
+    Compression(U, V, S, 40);
+    Compression(U, V, S, 80);
     
     //Task 8
     MatrixXd checkerboard = createCheckerboard(200);
@@ -121,3 +149,4 @@ int main(int argc, char **argv)
     saveToFile(noisy,200,200,"noisy_checkerboard.png");
     return 0;
 }
+
