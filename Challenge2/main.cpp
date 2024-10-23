@@ -3,6 +3,7 @@
 #include <Eigen/Sparse>
 #include <unsupported/Eigen/SparseExtra>
 #include <Eigen/Eigenvalues>
+#include <Eigen/SVD>
 #include <iostream>
 #include <random>
 
@@ -51,7 +52,9 @@ int main(int argc, char **argv)
     //Task 2
     SelfAdjointEigenSolver<MatrixXd> es;
     es.compute(gscaleSym);
-    printf("First eigenvalue is %f", es.eigenvalues());
+    Eigen::VectorXd eigenvalues = es.eigenvalues();
+    printf("First eigenvalue is %f\n", eigenvalues[eigenvalues.size() - 1]);
+    printf("Second eigenvalue is %f\n", eigenvalues[eigenvalues.size() - 2]);
 
     //Task 3
     saveMarket(gscaleSym,"ATA.mtx");
@@ -61,6 +64,18 @@ int main(int argc, char **argv)
 
     //Task 4
     cout << "Computing largest eigeinvalue using LIS with an appropriate shift: " << endl;
-    system("./etest1 ATA.mtx eigvec.mtx hist.txt -e pi -etol 1.e-8 -shift ");
+    system("./etest1 ATA.mtx eigvec.mtx hist.txt -e pi -etol 1.e-8 -shift 2.0");
+
+    //Task 5
+    
+    Eigen::BDCSVD<Eigen::MatrixXd> svd(gscale, Eigen::ComputeThinU | Eigen::ComputeThinV);
+    Eigen::VectorXd singular_values = svd.singularValues();
+    printf("The euclidean norm is %f\n", singular_values.norm());
+
+    //Task 6
+    Eigen::MatrixXd U = svd.matrixU();
+    Eigen::MatrixXd V = svd.matrixV();
+    
+    
     return 0;
 }
