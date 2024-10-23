@@ -3,6 +3,7 @@
 #include <Eigen/Sparse>
 #include <unsupported/Eigen/SparseExtra>
 #include <Eigen/Eigenvalues>
+#include <Eigen/SVD>
 #include <iostream>
 #include <random>
 
@@ -52,7 +53,20 @@ int main(int argc, char **argv)
 
     SelfAdjointEigenSolver<MatrixXd> es;
     es.compute(gscaleSym);
-    printf("First eigenvalue is %f", es.eigenvalues());
-   
+    Eigen::VectorXcd eigenvalues = es.eigenvalues();
+    printf("First eigenvalue is %f\n", eigenvalues[eigenvalues.size() - 1]);
+    printf("Second eigenvalue is %f\n", eigenvalues[eigenvalues.size() - 2]);
+
+    //Task 5
+    
+    Eigen::BDCSVD<Eigen::MatrixXd> svd(gscale, Eigen::ComputeThinU | Eigen::ComputeThinV);
+    Eigen::VectorXd singular_values = svd.singularValues();
+    printf("The euclidean norm is %f\n", singular_values.norm());
+
+    //Task 6
+    Eigen::MatrixXd U = svd.matrixU();
+    Eigen::MatrixXd V = svd.matrixV();
+    
+    
     return 0;
 }
