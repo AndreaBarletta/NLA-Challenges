@@ -2,6 +2,7 @@
 #include <Eigen/Dense>
 #include <Eigen/Sparse>
 #include <unsupported/Eigen/SparseExtra>
+#include <Eigen/Eigenvalues>
 #include <iostream>
 #include <random>
 
@@ -42,5 +43,11 @@ int main(int argc, char **argv)
             gscale(i, j) = static_cast<double>(imageData[i * width + j]);
         }
     }
+
+    //Task 2
+
+    SelfAdjointEigenSolver<MatrixXd> es;
+    es.compute(gscaleSym);
+    printf("First eigenvalue is %f", es.eigenvalues());
     return 0;
 }
