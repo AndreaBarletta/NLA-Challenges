@@ -28,8 +28,19 @@ int saveToFile(MatrixXd imageMatrix, int height, int width, const std::string ou
 
     return 0;
 }
-
-SparseMatrix<double> convToM(Matrix3d convM, int Aheight, int Awidth)
+int main(int argc, char **argv)
 {
+    //Task 1 (Load image)
+    int width, height, channels;
+    unsigned char *imageData = stbi_load("einstein.jpg", &width, &height, &channels, 1);
+
+    MatrixXd gscale(height, width);
+    for (int i = 0; i < height; i++)
+    {
+        for (int j = 0; j < width; j++)
+        {
+            gscale(i, j) = static_cast<double>(imageData[i * width + j]);
+        }
+    }
     return 0;
 }
