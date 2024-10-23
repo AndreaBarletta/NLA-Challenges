@@ -31,7 +31,8 @@ int saveToFile(MatrixXd imageMatrix, int height, int width, const std::string ou
     return 0;
 }
 
-void Compression(Eigen::MatrixXd U, Eigen::MatrixXd V, Eigen::VectorXd S, int k) {
+void Compression(Eigen::MatrixXd U, Eigen::MatrixXd V, Eigen::VectorXd S, int k, 
+    const std::string ouputFileName) {
     printf("k = %d\n", k);
     Eigen::MatrixXd C(U.rows(), k);
     Eigen::MatrixXd D(V.rows(), k);
@@ -55,6 +56,8 @@ void Compression(Eigen::MatrixXd U, Eigen::MatrixXd V, Eigen::VectorXd S, int k)
     printf("Number of nonzero entries in C: %d\n", nonzero_C);
     printf("Number of nonzero entries in D: %d\n", nonzero_D);
     printf("\n");
+    Eigen::MatrixXd CompressedImage = C * (D.transpose());
+    saveToFile(CompressedImage, CompressedImage.rows(), CompressedImage.cols(), ouputFileName);
 }
 
 int main(int argc, char **argv)
@@ -99,11 +102,12 @@ int main(int argc, char **argv)
     Eigen::VectorXd S = svd.singularValues();
     printf("The euclidean norm is %f\n", S.norm());
 
-    //Task 6
+    //Task 6 and 7
     Eigen::MatrixXd U = svd.matrixU();
     Eigen::MatrixXd V = svd.matrixV();
-    Compression(U, V, S, 40);
-    Compression(U, V, S, 80);
+    Compression(U, V, S, 40, "Compressed_Einsten_40.png");
+    Compression(U, V, S, 80, "Compressed_Einsten_80.png");
+
 
     return 0;
 }
