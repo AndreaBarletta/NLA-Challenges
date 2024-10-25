@@ -113,7 +113,7 @@ int main(int argc, char **argv)
 
     //Task 4
     cout << "Computing largest eigeinvalue using LIS with an appropriate shift: " << endl;
-    system("./etest1 ATA.mtx eigvec.mtx hist.txt -e pi -etol 1.e-8 -shift 2.0");
+    system(("./etest1 ATA.mtx eigvec.mtx hist.txt -e ii -etol 1.e-8 -shift "+std::to_string(eigenvalues[eigenvalues.size() - 1])).c_str());
 
     //Task 5
     
@@ -163,6 +163,7 @@ int main(int argc, char **argv)
     //Task 11 and 12
     Eigen::MatrixXd U_noisy = svd_noisy.matrixU();
     Eigen::MatrixXd V_noisy = svd_noisy.matrixV();
+    //This is not required for task completion, just to visualize the difference that k makes
     Compression(U_noisy, V_noisy, S_noisy, 1, "Compressed_Check_1.png");
     Compression(U_noisy, V_noisy, S_noisy, 2, "Compressed_Check_2.png");
     Compression(U_noisy, V_noisy, S_noisy, 3, "Compressed_Check_3.png");
